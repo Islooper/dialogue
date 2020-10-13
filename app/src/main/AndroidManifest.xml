@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.dialogue">
+
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- 必要的权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 非必要权限 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +29,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="@string/开发者key" />
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/network_security_config" />
+        <meta-data
+            android:name="com.baidu.speech.APP_ID"
+            android:value="22689272"
+            tools:replace="android:value" />
+        <meta-data
+            android:name="com.baidu.speech.API_KEY"
+            android:value="SenD1xodlI08wE0BkRZsflb2"
+            tools:replace="android:value" />
+        <meta-data
+            android:name="com.baidu.speech.SECRET_KEY"
+            android:value="XWDuCDnPuHk1lukpGnCYk86tj5wizqbd"
+            tools:replace="android:value" />
+
+
+
     </application>
 
 </manifest>

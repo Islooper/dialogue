@@ -26,8 +26,26 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation files('libs/bdasr_V3_20191210_81acdf5.jar')
+    implementation files('libs/com.baidu.tts_2.6.2.2.20200629_44818d4.jar')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+
+    implementation 'com.moxun:tagcloudlib:1.0.3'
+
+    implementation 'com.dnkilic.waveform:waveform:0.9.3'
+
+
+    // 封装的okhttp
+    implementation 'com.zhy:okhttputils:2.0.0'
+
+
+    // gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
+
+    // fastjson
+    implementation 'com.alibaba:fastjson:1.1.55.android'
 
 }
