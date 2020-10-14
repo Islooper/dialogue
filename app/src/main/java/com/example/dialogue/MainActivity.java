@@ -5,8 +5,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,12 +23,17 @@ import com.baidu.speech.EventListener;
 import com.baidu.speech.EventManager;
 import com.baidu.speech.EventManagerFactory;
 import com.baidu.speech.asr.SpeechConstant;
+import com.baidu.tts.client.SpeechSynthesizer;
+import com.baidu.tts.client.TtsMode;
 import com.example.dialogue.http.HttpUtils;
-import com.zhy.http.okhttp.https.HttpsUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.security.auth.login.LoginException;
 
 public class MainActivity extends AppCompatActivity implements EventListener {
 
@@ -35,6 +47,56 @@ public class MainActivity extends AppCompatActivity implements EventListener {
 
     ImageView mic;
 
+    /**
+     * 广播
+     */
+    public static final String BROADCAST_ACTION = "com.example.corn";
+    private BroadcastReceiver mBroadcastReceiver;
+
+    Context mContext;
+
+    // 创建百度语音合成的构造器
+    SpeechSynthesizer mSpeechSynthesizer;
+
+    String apiKey = "gSXKK3GyTSxSpTPbp4pBtGHd";
+    String secretKey = "apXsAuqiHrs3WhTWU9pUFWiVcZe5rLlq";
+    String appId = "22676139";
+    // 初始化百度tts
+    public void speakText(Context context , String resultVoicetString) {
+        // 创建百度语音合成的解析器
+        mSpeechSynthesizer = SpeechSynthesizer.getInstance();
+        mSpeechSynthesizer.setContext(context);
+        // 2. 设置listener
+        mSpeechSynthesizer.setSpeechSynthesizerListener(null);
+        // 3. 设置appId，appKey.secretKey
+        mSpeechSynthesizer.setAppId(appId);
+        mSpeechSynthesizer.setApiKey(apiKey, secretKey);
+
+        // 5. 以下setParam 参数选填。不填写则默认值生效
+        // 设置在线发声音人： 0 普通女声（默认） 1 普通男声 2 特别男声 3 情感男声<度逍遥> 4 情感儿童声<度丫丫>
+        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, "0");
+        // 精品语音+
+//        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, "5118");
+        // 设置合成的音量，0-15 ，默认 5
+        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_VOLUME, "15");
+        // 设置合成的语速，0-15 ，默认 5
+        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEED, "4");
+        // 设置合成的语调，0-15 ，默认 5
+        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_PITCH, "5");
+        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_MIX_MODE, SpeechSynthesizer.MIX_MODE_DEFAULT);
+        // 该参数设置为TtsMode.MIX生效。即纯在线模式不生效。
+        // 6. 初始化
+        int result = mSpeechSynthesizer.initTts(TtsMode.ONLINE);
+
+        mSpeechSynthesizer.speak(resultVoicetString); //开始播放
+
+//        mSpeechSynthesizer.pause(); //暂停
+//        mSpeechSynthesizer.resume(); //恢复
+//        mSpeechSynthesizer.stop(); //停止
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,12 +108,21 @@ public class MainActivity extends AppCompatActivity implements EventListener {
 
         initPermission();
 
-
+        mContext = this;
         //初始化EventManager对象
         asr = EventManagerFactory.create(this, "asr");
 
         //注册自己的输出事件类
         asr.registerListener(this); //  EventListener 中 onEvent方法
+
+
+        // 广播接受
+        mBroadcastReceiver = new MyBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BROADCAST_ACTION);
+        registerReceiver(mBroadcastReceiver, intentFilter);
+
+
     }
 
     // 权限申请：申请开启录音权限
@@ -132,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
         }
     }
 
+
     /**
      * 判断语音走向
      * @param voiceString：目标解析
@@ -148,5 +220,90 @@ public class MainActivity extends AppCompatActivity implements EventListener {
 
         )
             HttpUtils.getWeather();
+
+        // 你口渴吗？你是谁？
+        if ( voiceString.contains("你是谁") ||
+                voiceString.contains("你的名字") ||
+                voiceString.contains("名字")  ||
+                voiceString.contains("姓名")  ||
+                voiceString.contains("什么草")
+
+        ){
+            // 组语音包
+            String voiceContent = "我的名字是"+PlantConfig.name+"。对我说：查看详细资料，我会告诉你更多哦";
+            // 发送语音包
+            HttpUtils.readWords(voiceContent, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
+        }
+
+        if ( voiceString.contains("查看详细资料"))
+        {
+            // 组语音包
+            String voiceContent = PlantConfig.detail;
+            // 发送语音包
+            HttpUtils.readWords(voiceContent, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
+        }
+
+        if (    voiceString.contains("口渴") ||
+                voiceString.contains("喝水") ||
+                voiceString.contains("湿度") ||
+                voiceString.contains("渴不渴")
+        )
+        {
+            Log.e("kou" , "kou");
+            // 查找湿度传感器数据
+            HttpUtils.getHumidity();
+        }
+
     }
+
+
+
+    /**
+     * 广播接受类
+     */
+
+    class MyBroadcastReceiver extends BroadcastReceiver {
+        @SuppressLint("SetTextI18n")
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String value = intent.getStringExtra("voice");
+
+            if (value != null && !value.equals("")){
+                Log.e("get voice " , value);
+                // 获取音频文件
+               HttpUtils.readWords(value, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
+            }
+
+            String reader = intent.getStringExtra("reader");
+
+            if (reader != null && !reader.equals("")){
+             // 播放
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                try {
+                    mediaPlayer.setDataSource("/storage/emulated/0/1.mp3"); // 设置播放的文件位置
+
+                    mediaPlayer.prepare(); // 准备文件
+
+                    mediaPlayer.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+//            String thirsty = intent.getStringExtra("thirsty");
+//
+//            if (thirsty != null && !thirsty.equals("")){
+//                // 发送音频
+//                // 获取音频文件
+//                Log.e("th" , thirsty);
+//            }
+
+
+        }
+
+    }
+
+
+
 }
