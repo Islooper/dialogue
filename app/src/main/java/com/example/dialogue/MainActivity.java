@@ -103,16 +103,16 @@ public class MainActivity extends AppCompatActivity implements EventListener {
         setContentView(R.layout.activity_main);
 
         findId();
-//
+
         widgetInit();
 
         initPermission();
 
         mContext = this;
-        //初始化EventManager对象
+        // 初始化EventManager对象
         asr = EventManagerFactory.create(this, "asr");
 
-        //注册自己的输出事件类
+        // 注册自己的输出事件类
         asr.registerListener(this); //  EventListener 中 onEvent方法
 
 
@@ -243,7 +243,6 @@ public class MainActivity extends AppCompatActivity implements EventListener {
                 voiceString.contains("渴不渴")
         )
         {
-            Log.e("kou" , "kou");
             // 查找湿度传感器数据
             HttpUtils.getHumidity();
         }
