@@ -1,21 +1,10 @@
 package com.example.dialogue.http;
 
-import android.content.Context;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.os.Environment;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.baidu.tts.client.model.OnDownloadListener;
 import com.example.dialogue.BroadcastSender;
-import com.example.dialogue.MyApplication;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -23,8 +12,6 @@ import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +33,6 @@ public class HttpUtils {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Request request, Exception e) {
-                        Log.e("wrong" , e.getMessage());
                     }
 
                     @Override
@@ -296,7 +282,6 @@ public class HttpUtils {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Request request, Exception e) {
-                        Log.e("e" , e.getMessage());
                     }
 
                     @Override

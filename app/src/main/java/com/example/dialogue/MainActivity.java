@@ -149,9 +149,6 @@ public class MainActivity extends AppCompatActivity implements EventListener {
     }
 
     private void widgetInit() {
-//        siri.startAnim();
-//        siri.setVolume(20);
-
         mic.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -171,8 +168,6 @@ public class MainActivity extends AppCompatActivity implements EventListener {
     }
 
     private void findId() {
-//        siri = findViewById(R.id.siri_wave_view);
-
         mic = findViewById(R.id.iv_mic);
     }
 
@@ -196,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements EventListener {
                     int b = matcher.group(0).indexOf(",");
                     String voiceString = matcher.group(0).substring(a + 2, b - 3);
 
-                    Log.e("voice result:", voiceString);
                     checkVoice(voiceString);
                 }
             }
@@ -269,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements EventListener {
             String value = intent.getStringExtra("voice");
 
             if (value != null && !value.equals("")){
-                Log.e("get voice " , value);
                 // 获取音频文件
                HttpUtils.readWords(value, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
             }
@@ -290,15 +283,6 @@ public class MainActivity extends AppCompatActivity implements EventListener {
                 }
 
             }
-
-//            String thirsty = intent.getStringExtra("thirsty");
-//
-//            if (thirsty != null && !thirsty.equals("")){
-//                // 发送音频
-//                // 获取音频文件
-//                Log.e("th" , thirsty);
-//            }
-
 
         }
 
