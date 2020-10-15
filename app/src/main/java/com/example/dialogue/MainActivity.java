@@ -313,8 +313,6 @@ public class MainActivity extends AppCompatActivity implements EventListener {
 
                     mediaPlayer.prepare(); // 准备文件
 
-                    mediaPlayer.start();
-
                     // 播放完成监听
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
@@ -322,6 +320,10 @@ public class MainActivity extends AppCompatActivity implements EventListener {
                             discriminate.setText("");
                         }
                     });
+
+                    mediaPlayer.start();
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
