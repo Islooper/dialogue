@@ -122,6 +122,8 @@ public class HttpUtils {
      * 读取文字
      */
     public static void readWords(String voice,final String destFileDir, final String destFileName){
+        BroadcastSender sender = new BroadcastSender();
+        sender.send("words" , voice);
         OkHttpUtils.get()
                 .url("https://tsn.baidu.com/text2audio")
                 .addParams("tex" , voice)

@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.baidu.speech.EventListener;
 import com.baidu.speech.EventManager;
@@ -25,7 +27,10 @@ import com.baidu.speech.EventManagerFactory;
 import com.baidu.speech.asr.SpeechConstant;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.TtsMode;
+import com.example.dialogue.adapter.TextTagsAdapter;
 import com.example.dialogue.http.HttpUtils;
+import com.example.dialogue.util.TiaoZiUtil;
+import com.moxun.tagcloudlib.view.TagCloudView;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements EventListener {
     SiriWaveView siri;
 
     ImageView mic;
+    TextView discriminate;
+
+    private TiaoZiUtil tiaoziUtil;
 
     /**
      * 广播
@@ -102,9 +110,17 @@ public class MainActivity extends AppCompatActivity implements EventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 去除标题栏
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         findId();
 
         widgetInit();
+
+        initBallTips();
 
         initPermission();
 
@@ -123,6 +139,21 @@ public class MainActivity extends AppCompatActivity implements EventListener {
         registerReceiver(mBroadcastReceiver, intentFilter);
 
 
+    }
+
+
+    String[] tips = {"今天天气怎么样？", "今天热吗", "你叫什么名字",
+            "你口渴吗", "你是什么植物", "今天有雨吗",
+            "今天风向是什么",
+            "湿度是多少","今天适合出行吗"
+    };
+
+    private void initBallTips() {
+        TagCloudView tagCloudView = (TagCloudView) findViewById(R.id.tag_cloud);
+        tagCloudView.setBackgroundColor(Color.LTGRAY);
+
+        TextTagsAdapter tagsAdapter = new TextTagsAdapter(tips);
+        tagCloudView.setAdapter(tagsAdapter);
     }
 
     // 权限申请：申请开启录音权限
@@ -165,10 +196,13 @@ public class MainActivity extends AppCompatActivity implements EventListener {
                 return true;
             }
         });
+
+
     }
 
     private void findId() {
         mic = findViewById(R.id.iv_mic);
+        discriminate = findViewById(R.id.tv_discriminate);
     }
 
     /**
@@ -210,7 +244,8 @@ public class MainActivity extends AppCompatActivity implements EventListener {
                 voiceString.contains("有雨吗") ||
                 voiceString.contains("风大吗") ||
                 voiceString.contains("风向") ||
-                voiceString.contains("适合外出吗")
+                voiceString.contains("适合外出吗") ||
+                voiceString.contains("适合出行吗")
 
         )
             HttpUtils.getWeather();
@@ -220,7 +255,8 @@ public class MainActivity extends AppCompatActivity implements EventListener {
                 voiceString.contains("你的名字") ||
                 voiceString.contains("名字")  ||
                 voiceString.contains("姓名")  ||
-                voiceString.contains("什么草")
+                voiceString.contains("什么草") ||
+                voiceString.contains("植物")
 
         ){
             // 组语音包
@@ -264,6 +300,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
             if (value != null && !value.equals("")){
                 // 获取音频文件
                HttpUtils.readWords(value, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
+
             }
 
             String reader = intent.getStringExtra("reader");
@@ -277,10 +314,24 @@ public class MainActivity extends AppCompatActivity implements EventListener {
                     mediaPlayer.prepare(); // 准备文件
 
                     mediaPlayer.start();
+
+                    // 播放完成监听
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            discriminate.setText("");
+                        }
+                    });
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
+            }
+
+
+            String words = intent.getStringExtra("words");
+            if (words != null && !words.equals("")){
+                tiaoziUtil = new TiaoZiUtil(discriminate, words, 250);//调用构造方法，直接开启
             }
 
         }
