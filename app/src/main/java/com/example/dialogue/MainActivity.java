@@ -288,6 +288,8 @@ public class MainActivity extends AppCompatActivity implements EventListener {
             HttpUtils.getNoise();
         }else if (voiceString.contains("大气压")){
             HttpUtils.getPa();
+        }else if (voiceString.contains("紫外线")){
+            HttpUtils.getRays();
         }
         else
         {
@@ -304,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
      * 广播接受类
      */
 
+    MediaPlayer mediaPlayer = new MediaPlayer();
     class MyBroadcastReceiver extends BroadcastReceiver {
         @SuppressLint("SetTextI18n")
         @Override
@@ -320,8 +323,11 @@ public class MainActivity extends AppCompatActivity implements EventListener {
 
             if (reader != null && !reader.equals("")){
              // 播放
-                MediaPlayer mediaPlayer = new MediaPlayer();
+
                 try {
+                    if (mediaPlayer.isPlaying()){
+                        return;
+                    }
                     mediaPlayer.setDataSource("/storage/emulated/0/1.mp3"); // 设置播放的文件位置
 
                     mediaPlayer.prepare(); // 准备文件

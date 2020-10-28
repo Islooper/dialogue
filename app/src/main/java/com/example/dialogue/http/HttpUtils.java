@@ -352,7 +352,7 @@ public class HttpUtils {
 
 
     /**
-     * 获取大气压
+     * 获取大气压强
      */
 
     public static void getPa(){
@@ -377,7 +377,7 @@ public class HttpUtils {
 
                         // 判断数据
                         double thValue = Double.parseDouble(value);
-                        String voice = "当前大气压强为:"+thValue+"怕";
+                        String voice = "当前大气压强为:"+thValue;
 
                         HttpUtils.readWords(voice, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
 
@@ -385,6 +385,39 @@ public class HttpUtils {
                 });
     }
 
+
+    /**
+     * 获取紫外线
+     */
+    public static void getRays(){
+        OkHttpUtils.get()
+                .url(url + "placeAndTypeSelectSensorData.do")
+                .addParams("place" , "001")
+                .addParams("types" , "6")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        JSONObject data = JSONObject.parseObject(response);
+                        JSONArray result = data.getJSONArray("result");
+                        String res = result.getString(0);
+                        JSONObject humidity = JSONObject.parseObject(res);
+
+                        String value = humidity.getString("value");
+
+                        // 判断数据
+                        double thValue = Double.parseDouble(value);
+                        String voice = "当前紫外线强度为:"+thValue;
+
+                        HttpUtils.readWords(voice, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
+
+                    }
+                });
+    }
 
     /**
      * 查询云端问题答案
