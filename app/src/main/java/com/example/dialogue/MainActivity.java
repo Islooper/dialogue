@@ -284,10 +284,13 @@ public class MainActivity extends AppCompatActivity implements EventListener {
             // 查找湿度传感器数据
             HttpUtils.getHumidity();
         }
+        else if (voiceString.contains("噪声")){
+            HttpUtils.getNoise();
+        }
         else
         {
             // 查询云端
-            HttpUtils.searchAnswer("我是谁");
+            HttpUtils.searchAnswer(voiceString);
         }
 
 
