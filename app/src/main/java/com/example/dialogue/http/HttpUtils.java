@@ -1,6 +1,7 @@
 package com.example.dialogue.http;
 
 import android.os.Environment;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -306,6 +307,40 @@ public class HttpUtils {
 
                         HttpUtils.readWords(voice, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
 
+                    }
+                });
+    }
+
+
+    /**
+     * 查询云端问题答案
+     * @param question：需要查询的问题
+     */
+
+    public static void searchAnswer(String question){
+        OkHttpUtils.get()
+                .url(url + "searchAnswer.do")
+                .addParams("name" , question)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        JSONObject data = JSONObject.parseObject(response);
+
+                        Integer code = data.getInteger("resultCode");
+                        if (code == 0){
+                            JSONArray arr = data.getJSONArray("result");
+                            String result = arr.getString(0);
+                            JSONObject anJson = JSONObject.parseObject(result);
+                            String answer = anJson.getString("answer");
+
+                            Log.e("aaaanswer" , answer);
+                        }
                     }
                 });
     }

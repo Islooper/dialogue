@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
             HttpUtils.getWeather();
 
         // 你口渴吗？你是谁？
-        if ( voiceString.contains("你是谁") ||
+        else if ( voiceString.contains("你是谁") ||
                 voiceString.contains("你的名字") ||
                 voiceString.contains("名字")  ||
                 voiceString.contains("姓名")  ||
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
             HttpUtils.readWords(voiceContent, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
         }
 
-        if ( voiceString.contains("查看详细资料"))
+        else if ( voiceString.contains("查看详细资料"))
         {
             // 组语音包
             String voiceContent = PlantConfig.detail;
@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
             HttpUtils.readWords(voiceContent, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
         }
 
-        if (    voiceString.contains("口渴") ||
+        else if (    voiceString.contains("口渴") ||
                 voiceString.contains("喝水") ||
                 voiceString.contains("湿度") ||
                 voiceString.contains("渴不渴")
@@ -282,6 +282,12 @@ public class MainActivity extends AppCompatActivity implements EventListener {
             // 查找湿度传感器数据
             HttpUtils.getHumidity();
         }
+        else
+        {
+            // 查询云端
+            HttpUtils.searchAnswer("我是谁");
+        }
+
 
     }
 
