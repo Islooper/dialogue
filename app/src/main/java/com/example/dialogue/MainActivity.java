@@ -239,6 +239,9 @@ public class MainActivity extends AppCompatActivity implements EventListener {
      */
     public void checkVoice(String voiceString){
         question.setText(voiceString);
+        if (mediaPlayer.isPlaying()){
+            return;
+        }
         if (    voiceString.contains("天气") ||
                 voiceString.contains("温度") ||
                 voiceString.contains("热吗") ||
@@ -337,9 +340,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
              // 播放
 
                 try {
-                    if (mediaPlayer.isPlaying()){
-                        return;
-                    }
+
                     mediaPlayer.setDataSource("/storage/emulated/0/1.mp3"); // 设置播放的文件位置
 
                     mediaPlayer.prepare(); // 准备文件
@@ -365,9 +366,6 @@ public class MainActivity extends AppCompatActivity implements EventListener {
             String words = intent.getStringExtra("words");
             if (words != null && !words.equals("")){
 
-                if (mediaPlayer.isPlaying()){
-                    return;
-                }
                 tiaoziUtil = new TiaoZiUtil(discriminate, words, 250);//调用构造方法，直接开启
             }
 
