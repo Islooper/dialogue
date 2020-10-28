@@ -98,9 +98,6 @@ public class MainActivity extends AppCompatActivity implements EventListener {
 
         mSpeechSynthesizer.speak(resultVoicetString); //开始播放
 
-//        mSpeechSynthesizer.pause(); //暂停
-//        mSpeechSynthesizer.resume(); //恢复
-//        mSpeechSynthesizer.stop(); //停止
 
     }
 
@@ -239,9 +236,6 @@ public class MainActivity extends AppCompatActivity implements EventListener {
      */
     public void checkVoice(String voiceString){
         question.setText(voiceString);
-        if (mediaPlayer.isPlaying()){
-            return;
-        }
         if (    voiceString.contains("天气") ||
                 voiceString.contains("温度") ||
                 voiceString.contains("热吗") ||
@@ -287,11 +281,17 @@ public class MainActivity extends AppCompatActivity implements EventListener {
             // 查找湿度传感器数据
             HttpUtils.getHumidity();
         }
-        else if (voiceString.contains("噪声")){
+        else if (voiceString.contains("噪声") ||
+                voiceString.contains("噪音")
+        ){
             HttpUtils.getNoise();
-        }else if (voiceString.contains("大气压")){
+        }else if (voiceString.contains("大气压") ||
+                voiceString.contains("气压")
+        ){
             HttpUtils.getPa();
-        }else if (voiceString.contains("紫外线")){
+        }else if (voiceString.contains("紫外线") ||
+                voiceString.contains("辐射")
+        ){
             HttpUtils.getRays();
         }else if (voiceString.contains("水深") ||
                 voiceString.contains("水的深度")||
@@ -365,7 +365,6 @@ public class MainActivity extends AppCompatActivity implements EventListener {
 
             String words = intent.getStringExtra("words");
             if (words != null && !words.equals("")){
-
                 tiaoziUtil = new TiaoZiUtil(discriminate, words, 250);//调用构造方法，直接开启
             }
 
