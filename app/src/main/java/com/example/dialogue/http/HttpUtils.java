@@ -297,7 +297,7 @@ public class HttpUtils {
                         String value = humidity.getString("value");
 
                         // 判断数据
-                        int thValue = Integer.parseInt(value);
+                        double thValue = Double.parseDouble(value);
                         String voice = "";
                         if (thValue < 10){
                             voice = "检测到湿度较低，快给我浇水啦";
