@@ -339,7 +339,7 @@ public class HttpUtils {
                             JSONObject anJson = JSONObject.parseObject(result);
                             String answer = anJson.getString("answer");
 
-                            Log.e("aaaanswer" , answer);
+                            HttpUtils.readWords(answer, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
                         }
                     }
                 });
