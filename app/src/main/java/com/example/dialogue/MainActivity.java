@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
      * 广播接受类
      */
 
-    MediaPlayer mediaPlayer = new MediaPlayer();
+
     class MyBroadcastReceiver extends BroadcastReceiver {
         @SuppressLint("SetTextI18n")
         @Override
@@ -340,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
              // 播放
 
                 try {
-
+                    MediaPlayer mediaPlayer = new MediaPlayer();
                     mediaPlayer.setDataSource("/storage/emulated/0/1.mp3"); // 设置播放的文件位置
 
                     mediaPlayer.prepare(); // 准备文件
