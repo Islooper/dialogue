@@ -22,7 +22,7 @@ import java.io.InputStream;
  */
 public class HttpUtils {
 
-    public static String url = "http://192.168.8.103:8080/";
+    public static String url = "http://118.25.37.124:8088/";
     /**
      * 获取当前天气
      */
