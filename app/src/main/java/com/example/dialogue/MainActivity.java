@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
     SiriWaveView siri;
 
     ImageView mic;
-    TextView discriminate;
+    TextView discriminate , question;
 
     private TiaoZiUtil tiaoziUtil;
 
@@ -203,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
     private void findId() {
         mic = findViewById(R.id.iv_mic);
         discriminate = findViewById(R.id.tv_discriminate);
+        question = findViewById(R.id.tv_question);
     }
 
     /**
@@ -237,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements EventListener {
      * @param voiceString：目标解析
      */
     public void checkVoice(String voiceString){
+        question.setText(voiceString);
         if (    voiceString.contains("天气") ||
                 voiceString.contains("温度") ||
                 voiceString.contains("热吗") ||
