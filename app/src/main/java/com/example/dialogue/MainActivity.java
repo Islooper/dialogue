@@ -290,6 +290,18 @@ public class MainActivity extends AppCompatActivity implements EventListener {
             HttpUtils.getPa();
         }else if (voiceString.contains("紫外线")){
             HttpUtils.getRays();
+        }else if (voiceString.contains("水深") ||
+                voiceString.contains("水的深度")||
+                voiceString.contains("深度") ||
+                voiceString.contains("水多深")
+
+        ){
+            HttpUtils.getWater();
+        }
+        else if (voiceString.contains("浑浊") ||
+                voiceString.contains("水干净吗")
+        ){
+            HttpUtils.getMuddy();
         }
         else
         {
@@ -352,6 +364,10 @@ public class MainActivity extends AppCompatActivity implements EventListener {
 
             String words = intent.getStringExtra("words");
             if (words != null && !words.equals("")){
+
+                if (mediaPlayer.isPlaying()){
+                    return;
+                }
                 tiaoziUtil = new TiaoZiUtil(discriminate, words, 250);//调用构造方法，直接开启
             }
 

@@ -419,6 +419,76 @@ public class HttpUtils {
                 });
     }
 
+
+    /**
+     * 获取水深
+     */
+    public static void getWater(){
+        OkHttpUtils.get()
+                .url(url + "placeAndTypeSelectSensorData.do")
+                .addParams("place" , "001")
+                .addParams("types" , "72")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        JSONObject data = JSONObject.parseObject(response);
+                        JSONArray result = data.getJSONArray("result");
+                        String res = result.getString(0);
+                        JSONObject humidity = JSONObject.parseObject(res);
+
+                        String value = humidity.getString("value");
+
+                        // 判断数据
+                        double thValue = Double.parseDouble(value);
+                        String voice = "当前水深为:"+thValue+"米";
+
+                        HttpUtils.readWords(voice, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
+
+                    }
+                });
+    }
+
+
+    /**
+     * 获取浑浊度
+     */
+    public static void getMuddy(){
+        OkHttpUtils.get()
+                .url(url + "placeAndTypeSelectSensorData.do")
+                .addParams("place" , "001")
+                .addParams("types" , "71")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        JSONObject data = JSONObject.parseObject(response);
+                        JSONArray result = data.getJSONArray("result");
+                        String res = result.getString(0);
+                        JSONObject humidity = JSONObject.parseObject(res);
+
+                        String value = humidity.getString("value");
+
+                        // 判断数据
+                        double thValue = Double.parseDouble(value);
+                        String voice = "当前浑浊度为:"+thValue;
+
+                        HttpUtils.readWords(voice, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
+
+                    }
+                });
+    }
+
+
+
     /**
      * 查询云端问题答案
      * @param question：需要查询的问题
