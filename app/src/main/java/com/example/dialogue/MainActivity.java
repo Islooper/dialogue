@@ -286,6 +286,8 @@ public class MainActivity extends AppCompatActivity implements EventListener {
         }
         else if (voiceString.contains("噪声")){
             HttpUtils.getNoise();
+        }else if (voiceString.contains("大气压")){
+            HttpUtils.getPa();
         }
         else
         {

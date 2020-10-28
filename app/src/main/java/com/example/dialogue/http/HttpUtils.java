@@ -352,6 +352,41 @@ public class HttpUtils {
 
 
     /**
+     * 获取大气压
+     */
+
+    public static void getPa(){
+        OkHttpUtils.get()
+                .url(url + "placeAndTypeSelectSensorData.do")
+                .addParams("place" , "001")
+                .addParams("types" , "14")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        JSONObject data = JSONObject.parseObject(response);
+                        JSONArray result = data.getJSONArray("result");
+                        String res = result.getString(0);
+                        JSONObject humidity = JSONObject.parseObject(res);
+
+                        String value = humidity.getString("value");
+
+                        // 判断数据
+                        double thValue = Double.parseDouble(value);
+                        String voice = "当前大气压强为:"+thValue+"怕";
+
+                        HttpUtils.readWords(voice, Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
+
+                    }
+                });
+    }
+
+
+    /**
      * 查询云端问题答案
      * @param question：需要查询的问题
      */
@@ -374,6 +409,10 @@ public class HttpUtils {
                         Integer code = data.getInteger("resultCode");
                         if (code == 0){
                             JSONArray arr = data.getJSONArray("result");
+                            if (arr.size() == 0){
+                                HttpUtils.readWords("这个问题超出了我的理解。", Environment.getExternalStorageDirectory().getAbsolutePath() , "1.mp3");
+                                return;
+                            }
                             String result = arr.getString(0);
                             JSONObject anJson = JSONObject.parseObject(result);
                             String answer = anJson.getString("answer");
